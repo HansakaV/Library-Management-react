@@ -1,11 +1,8 @@
 export type Reader =  {
     readerId: string
-    firstName: string
-    lastName: string
+    Name: string
     email: string
     phone: string
     address: string
-    membershipDate: Date
-    status: 'active' | 'inactive' | 'suspended'
 }
 

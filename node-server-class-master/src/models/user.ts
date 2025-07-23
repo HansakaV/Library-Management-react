@@ -1,11 +1,19 @@
 import mongoose from "mongoose";
 
 type user = {
+    name: string;
     email: string;
     password: string;
 }
 
 const userSchema = new mongoose.Schema<user>({
+    name: {
+        type: String,
+        required: [true, "Name is required"],
+        minlength: [2, "Name must be at least 2 characters long"],
+        maxlength: [50, "Name cannot exceed 50 characters"],
+        trim: true,
+    },
     email: {
         type: String,
         required: [true, "Email is required"],

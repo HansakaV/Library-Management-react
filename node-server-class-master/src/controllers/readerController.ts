@@ -4,6 +4,7 @@ import { APIError } from "../errors/ApiError";
 
 
 export const createReader = async (req: Request, res: Response, next: NextFunction) => {
+    console.log("Creating reader with data:", req.body);
     try {
         const reader = new ReaderModel(req.body);
         await reader.save();

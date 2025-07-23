@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
  
 type Reader = {
-  readerId: string;
   name: string;
   email: string;
   phone: string;
@@ -9,12 +8,7 @@ type Reader = {
 }
 
 const readerSchema = new mongoose.Schema<Reader>({
-  readerId: {
-    type: String,
-    required: [true, "Reader ID is required"],
-    unique: [true, "Reader ID already exists"],
-    trim: true,
-  },
+  
   name: {
     type: String,
     required: [true, "name is required"],

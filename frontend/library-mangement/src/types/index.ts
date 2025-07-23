@@ -3,6 +3,7 @@ export interface Reader {
     name: string;
     email: string;
     phone: string;
+    address: string;
 }
 
 export interface Book {
