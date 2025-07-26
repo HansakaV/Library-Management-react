@@ -3,6 +3,8 @@ import { APIError } from "../errors/ApiError";
 import{ LendingModel} from "../models/lending";
 
 export const createLending = async (req: Request, res: Response, next: NextFunction) => {
+    console.log("Creating a new lending record...", req.body);
+    
     try {
         const lending = new LendingModel(req.body);
         await lending.save();
@@ -13,8 +15,9 @@ export const createLending = async (req: Request, res: Response, next: NextFunct
 }
 
 export const getLendings = async (req: Request, res: Response, next: NextFunction) => {
+    console.log("Fetching lendings...");
     try {
-        const lendings = await LendingModel.find().populate('readerId').populate('isbn');
+        const lendings = await LendingModel.find().populate('readerId').populate('bookId');
         res.status(200).json(lendings);
     } catch (error: any) {
         next(error);

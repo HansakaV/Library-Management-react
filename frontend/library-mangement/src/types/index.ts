@@ -1,5 +1,5 @@
 export interface Reader {
-    id: string;
+    _id: string;
     name: string;
     email: string;
     phone: string;
@@ -7,7 +7,8 @@ export interface Reader {
 }
 
 export interface Book {
-    id: string;
+      id: string;
+    _id: string; // Added to match expected type
     title: string;
     author: string;
     isbn: string;
@@ -16,6 +17,7 @@ export interface Book {
 
 export interface LendingTransaction {
     id: string;
+    _id: string; // Added to match expected type
     bookId: string;
     readerId: string;
     lendDate: string;

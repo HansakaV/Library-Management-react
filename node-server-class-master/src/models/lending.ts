@@ -1,32 +1,26 @@
 import mongoose from "mongoose";
 
 type Lending = {
-  lendingId: string
-  readerId: mongoose.Types.ObjectId
-  isbn: mongoose.Types.ObjectId
-  lendDate: Date
-  dueDate: Date
-  returnDate?: Date
-  status: 'active' | 'returned' | 'overdue'
-
+  _id?: string
+  id?: string // For frontend compatibility
+  bookId: string // Changed from bookname to bookId to match frontend
+  readerId: string // Changed from readername to readerId to match frontend
+  lendDate: Date | string // Allow both Date and string for flexibility
+  dueDate: Date | string
+  returnDate?: Date | string | null
+  status?: 'active' | 'returned' | 'overdue'
 }
 
 const lendingSchema = new mongoose.Schema<Lending>({
-  lendingId: {
+  bookId: {
     type: String,
-    required: [true, "Lending ID is required"],
-    unique: [true, "Lending ID already exists"],
+    required: [true, "Book ID is required"],
     trim: true,
   },
   readerId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Reader',
+    type: String,
     required: [true, "Reader ID is required"],
-  },
-  isbn: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Book',
-    required: [true, "Book ID is required"],
+    trim: true,
   },
   lendDate: {
     type: Date,
@@ -39,6 +33,7 @@ const lendingSchema = new mongoose.Schema<Lending>({
   },
   returnDate: {
     type: Date,
+    default: null,
   },
   status: {
     type: String,
@@ -48,7 +43,18 @@ const lendingSchema = new mongoose.Schema<Lending>({
     },
     default: 'active',
   },
-
+}, {
+  timestamps: true,
+  toJSON: {
+    transform: function(doc, ret) {
+      ret.id = ret._id.toString();
+      // Convert dates to YYYY-MM-DD format for frontend
+      ret.lendDate = ret.lendDate ? ret.lendDate.toISOString().split('T')[0] : null;
+      ret.dueDate = ret.dueDate ? ret.dueDate.toISOString().split('T')[0] : null;
+      ret.returnDate = ret.returnDate ? ret.returnDate.toISOString().split('T')[0] : null;
+      return ret;
+    }
+  }
 })
 
 export const LendingModel = mongoose.model("Lending", lendingSchema)

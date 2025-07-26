@@ -24,7 +24,12 @@ const ItemsPage: React.FC = () => {
         try {
             setIsBooksLoading(true);
             const result = await getAllBooks();
-            setBooks(result);
+            // Ensure each book has both id and _id properties
+            const booksWithId = result.map(book => ({
+                ...book,
+                _id: book.id // Set _id to match id
+            }));
+            setBooks(booksWithId);
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 toast.error(error.response?.data?.message || error.message);
@@ -160,7 +165,7 @@ const ItemsPage: React.FC = () => {
 
         try {
             const formData = new FormData(e.currentTarget);
-            const bookData: Omit<Book, 'id'> = {
+            const bookData = {
                 title: formData.get('title') as string,
                 author: formData.get('author') as string,
                 isbn: formData.get('isbn') as string,

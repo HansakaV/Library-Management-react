@@ -5,9 +5,10 @@ interface TableProps<T> {
     columns: { key: keyof T | 'actions'; header: string; render?: (item: T) => React.ReactNode }[];
     onEdit?: (item: T) => void;
     onDelete?: (item: T) => void;
+
 }
 
-const Table = <T extends { id: string }>({ data, columns, onEdit, onDelete }: TableProps<T>) => {
+const Table = <T extends { _id: string }>({ data, columns, onEdit, onDelete }: TableProps<T>) => {
     const renderCell = (item: T, col: { key: keyof T | 'actions'; header: string; render?: (item: T) => React.ReactNode }) => {
         if (col.render) {
             return col.render(item);
@@ -58,7 +59,7 @@ const Table = <T extends { id: string }>({ data, columns, onEdit, onDelete }: Ta
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                 {data.map((item) => (
-                    <tr key={item.id}>
+                    <tr key={item._id}>
                         {columns.map((col) => (
                             <td key={String(col.key)} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 {renderCell(item, col)}

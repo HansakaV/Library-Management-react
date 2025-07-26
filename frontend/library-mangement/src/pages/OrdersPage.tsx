@@ -7,9 +7,9 @@ import React, {useState} from "react";
 
 const OrdersPage: React.FC = () => {
     const [transactions, setTransactions] = useState<LendingTransaction[]>([
-        { id: 't1', bookId: 'b1', readerId: '1', lendDate: '2024-07-01', dueDate: '2024-07-15', returnDate: null },
-        { id: 't2', bookId: 'b2', readerId: '2', lendDate: '2024-06-20', dueDate: '2024-07-04', returnDate: '2024-07-03' },
-        { id: 't3', bookId: 'b3', readerId: '3', lendDate: '2024-07-10', dueDate: '2024-07-24', returnDate: null },
+        { _id:'t1',id: 't1', bookId: 'b1', readerId: '1', lendDate: '2024-07-01', dueDate: '2024-07-15', returnDate: null },
+        { _id:'t2',id: 't2', bookId: 'b2', readerId: '2', lendDate: '2024-06-20', dueDate: '2024-07-04', returnDate: '2024-07-03' },
+        { _id:'t3',id: 't3', bookId: 'b3', readerId: '3', lendDate: '2024-07-10', dueDate: '2024-07-24', returnDate: null },
     ]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentTransaction, setCurrentTransaction] = useState<LendingTransaction | null>(null);
@@ -67,6 +67,7 @@ const OrdersPage: React.FC = () => {
         const returnDateValue = formData.get('returnDate') as string;
         const newTransaction: LendingTransaction = {
             id: currentTransaction?.id || String(Date.now()),
+            _id: currentTransaction?._id || String(Date.now()), // Ensure _id is set
             bookId: formData.get('bookId') as string,
             readerId: formData.get('readerId') as string,
             lendDate: formData.get('lendDate') as string,
