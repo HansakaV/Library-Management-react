@@ -7,6 +7,9 @@ import Dashboard from "./pages/Dashboard.tsx";
 import CustomersPage from "./pages/CustomersPage.tsx";
 import ItemsPage from "./pages/ItemsPage.tsx";
 import OrdersPage from "./pages/OrdersPage.tsx";
+import NotificationsPage from "./pages/NotificationsPage.tsx";
+
+
 
 
 const router = createBrowserRouter([
@@ -24,6 +27,8 @@ const router = createBrowserRouter([
           { path: "/dashboard/customers", element: <CustomersPage /> },
           { path: "/dashboard/items", element: <ItemsPage /> },
           { path: "/dashboard/orders", element: <OrdersPage /> },
+          { path: "/dashboard/notifications", element: <NotificationsPage /> },
+
         ],
       },
     ],

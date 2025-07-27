@@ -10,7 +10,7 @@ export const deleteBook = async (_id: string): Promise<void> => {
   await apiClient.delete(`/customers/${_id}`)
 }
 
-export const addBook = async (bookData: Omit<Book, "id" | "_id">): Promise<Book> => {
+export const addBook = async (bookData: Omit<Book, "id">): Promise<Book> => {
     console.log("Adding book with data:", bookData)
   const response = await apiClient.post("/books", bookData)
   console.log("Response from adding book:", response.data)
@@ -18,9 +18,7 @@ export const addBook = async (bookData: Omit<Book, "id" | "_id">): Promise<Book>
   return response.data
 }
 
-export const updateBook = async (_id: string, bookData: Omit<Book, "id" | "_id">) => {
+export const updateBook = async (_id: string, bookData: Omit<Book, "id">) => {
   const response = await apiClient.put(`/books/${_id}`, bookData)
   return response.data
 }
-
-

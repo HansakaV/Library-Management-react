@@ -103,7 +103,7 @@ const CustomersPage: React.FC = () => {
 
         try {
             const formData = new FormData(e.currentTarget);
-            const readerData: Omit<Reader, '_id'> = {
+            const readerData: Omit<Reader, 'id'> = {
                 name: formData.get('name') as string,
                 email: formData.get('email') as string,
                 phone: formData.get('phone') as string,
@@ -112,9 +112,9 @@ const CustomersPage: React.FC = () => {
 
             if (selectedReader) {
                 // Update existing reader
-                const updatedReader = await updateReader(selectedReader._id, readerData);
+                const updatedReader = await updateReader(selectedReader.id, readerData);
                 setReaders((prev) =>
-                    prev.map((reader) => (reader._id === selectedReader._id ? updatedReader : reader))
+                    prev.map((reader) => (reader.id === selectedReader.id ? updatedReader : reader))
                 );
                 setIsEditModalOpen(false);
                 toast.success("Reader updated successfully");
@@ -141,7 +141,7 @@ const CustomersPage: React.FC = () => {
         if (selectedReader) {
             try {
                 setIsSubmitting(true);
-                await removeReader(selectedReader._id);
+                await removeReader(selectedReader.id);
                 // Refresh the list after successful deletion
                 await fetchAllReaders();
             } catch (error) {

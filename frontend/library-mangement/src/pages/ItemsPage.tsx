@@ -3,7 +3,7 @@ import { Button } from "../components/Button.tsx";
 import { Modal } from '../components/Modal.tsx';
 import { Input } from '../components/Input.tsx';
 import Table from "../components/Table.tsx";
-import type { Book } from "../types";
+import type { Book } from "../types/index.ts";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { addBook, deleteBook, getAllBooks, updateBook } from "../services/bookService.ts";
@@ -24,12 +24,7 @@ const ItemsPage: React.FC = () => {
         try {
             setIsBooksLoading(true);
             const result = await getAllBooks();
-            // Ensure each book has both id and _id properties
-            const booksWithId = result.map(book => ({
-                ...book,
-                _id: book.id // Set _id to match id
-            }));
-            setBooks(booksWithId);
+            setBooks(result);
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 toast.error(error.response?.data?.message || error.message);
@@ -67,8 +62,8 @@ const ItemsPage: React.FC = () => {
                             book.isbn.toLowerCase().includes(searchTerm.toLowerCase());
         
         const matchesStatus = statusFilter === 'all' || 
-                            (statusFilter === 'available' && book.available) ||
-                            (statusFilter === 'unavailable' && !book.available);
+                            (statusFilter === 'available' && book.status) ||
+                            (statusFilter === 'unavailable' && !book.status);
         
         return matchesSearch && matchesStatus;
     });
@@ -82,11 +77,11 @@ const ItemsPage: React.FC = () => {
             header: 'Status',
             render: (book: Book) => (
                 <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                    book.available 
+                    book.status
                         ? 'bg-green-100 text-green-800' 
                         : 'bg-red-100 text-red-800'
                 }`}>
-                    {book.available ? 'Available' : 'Checked Out'}
+                    {book.status ? 'Available' : 'Checked Out'}
                 </span>
             ),
         },
@@ -112,12 +107,12 @@ const ItemsPage: React.FC = () => {
                         Delete
                     </Button>
                     <Button
-                        variant={book.available ? "warning" : "primary"}
+                        variant={book.status ? "warning" : "primary"}
                         onClick={() => handleToggleAvailability(book)}
                         disabled={isSubmitting}
                         size="sm"
                     >
-                        {book.available ? 'Check Out' : 'Return'}
+                        {book.status ? 'Check Out' : 'Return'}
                     </Button>
                 </div>
             ),
@@ -142,12 +137,13 @@ const ItemsPage: React.FC = () => {
     const handleToggleAvailability = async (book: Book) => {
         try {
             setIsSubmitting(true);
-            const updatedBookData = { ...book, available: !book.available };
+            const updatedBookData = { ...book, available: !book.status };
             const updatedBook = await updateBook(book.id, updatedBookData);
             setBooks((prev) =>
                 prev.map((b) => (b.id === book.id ? updatedBook : b))
             );
-            toast.success(book.available ? "Book checked out successfully" : "Book returned successfully");
+            toast.success(book.status
+                 ? "Book checked out successfully" : "Book returned successfully");
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 toast.error(error.response?.data?.message || error.message);
@@ -165,11 +161,11 @@ const ItemsPage: React.FC = () => {
 
         try {
             const formData = new FormData(e.currentTarget);
-            const bookData = {
+            const bookData: Omit<Book, 'id' > = {
                 title: formData.get('title') as string,
                 author: formData.get('author') as string,
                 isbn: formData.get('isbn') as string,
-                available: formData.get('available') === 'on',
+                status: formData.get('available') === 'on',
             };
 
             if (selectedBook) {
@@ -222,8 +218,8 @@ const ItemsPage: React.FC = () => {
         setSelectedBook(null);
     };
 
-    const availableBooks = books.filter(book => book.available).length;
-    const checkedOutBooks = books.filter(book => !book.available).length;
+    const availableBooks = books.filter(book => book.status).length;
+    const checkedOutBooks = books.filter(book => !book.status).length;
 
     if (isBooksLoading) {
         return (
@@ -314,6 +310,7 @@ const ItemsPage: React.FC = () => {
                             </p>
                         </div>
                         <Table data={filteredBooks} columns={columns} />
+
                     </div>
                 </div>
 
@@ -350,6 +347,10 @@ const ItemsPage: React.FC = () => {
                                 disabled={isSubmitting}
                                 className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                             />
+
+
+
+
                             <label htmlFor="available" className="ml-2 block text-sm text-gray-900">
                                 Available for checkout
                             </label>
@@ -390,6 +391,11 @@ const ItemsPage: React.FC = () => {
                         <Input 
                             label="Author" 
                             name="author" 
+
+
+
+
+
                             defaultValue={selectedBook?.author || ''} 
                             required 
                             disabled={isSubmitting}
@@ -405,7 +411,7 @@ const ItemsPage: React.FC = () => {
                                 id="available-edit"
                                 name="available"
                                 type="checkbox"
-                                defaultChecked={selectedBook?.available || false}
+                                defaultChecked={selectedBook?.status || false}
                                 disabled={isSubmitting}
                                 className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                             />
