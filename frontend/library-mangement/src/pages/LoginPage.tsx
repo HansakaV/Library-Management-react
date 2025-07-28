@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { login as loginUser } from "../services/authService"
+import { useAuth } from "../context/useAuth" // Import your auth context
 import toast from "react-hot-toast"
 
 interface FormData {
@@ -15,13 +16,13 @@ interface FormErrors {
 
 const Login = () => {
   const [formData, setFormData] = useState<FormData>({
-
     email: "",
     password: "",
   })
   const [errors, setErrors] = useState<FormErrors>({})
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
+  const { login } = useAuth() // Get login function from context
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {}
@@ -49,16 +50,26 @@ const Login = () => {
     if (validateForm()) {
       setIsLoading(true)
       try {
-         await loginUser(formData)
-        toast.success("Login successful!")
-        navigate("/dashboard")
-        //window.location.href = '/dashboard'
-
-        // Handle successful login (e.g., redirect, store token, etc.)
+        const response = await loginUser(formData)
+        console.log("Login response:", response)
+        
+        if (response.status === 200) {
+          // Update authentication state FIRST
+          await login(response.accessToken)
+          
+          // Show success message
+          toast.success("Login successful!")
+          
+          // Navigate to dashboard AFTER auth state is updated
+          navigate("/dashboard", { replace: true })
+        } else {
+          toast.error("Login failed. Please check your credentials.")
+        }
+       
       } catch (error) {
         console.error("Login failed:", error)
-        // Handle login error (e.g., show error message)
         setErrors({ password: "Invalid email or password" })
+        toast.error("Login failed. Please check your credentials.")
       } finally {
         setIsLoading(false)
       }

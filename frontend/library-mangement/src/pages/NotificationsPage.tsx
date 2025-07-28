@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+
 import { Button } from "../components/Button.tsx";
 import { Modal } from "../components/Modal.tsx";
 import { Input } from '../components/Input.tsx';
@@ -54,7 +55,30 @@ const NotificationsPage: React.FC = () => {
     subject: 'Overdue Books Reminder - Library System',
     message: `Dear {readerName},
 
+
 This is a friendly reminder that you have overdue books from our library.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Overdue Books:
 {bookDetails}
@@ -67,8 +91,16 @@ Best regards,
 Library Management System`
   });
 
+  console.log(setEmailTemplate,transactions,readers,books)
+
   // Fetch all required data
+
+
   const fetchAllData = async () => {
+
+
+
+
     try {
       setIsLoading(true);
       const [transactionsResult, readersResult, booksResult] = await Promise.all([
@@ -193,11 +225,11 @@ Library Management System`
   }, []);
 
   // Calculate days overdue
-  const calculateDaysOverdue = (dueDate: string) => {
+ /*  const calculateDaysOverdue = (dueDate: string) => {
     const today = new Date();
     const due = new Date(dueDate);
     return Math.floor((today.getTime() - due.getTime()) / (1000 * 60 * 60 * 24));
-  };
+  }; */
 
   // Handle individual reader selection
   const handleReaderSelection = (readerId: string) => {
