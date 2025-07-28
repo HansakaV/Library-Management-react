@@ -30,7 +30,7 @@ Check out the live app:
 
 ### 1. Clone the Repository
 
-git clone https://github.com/YOUR-USERNAME/library-system.git
+git clone https://github.com/HansakaV/library-system.git
 cd library-system
 
 2. Frontend Setup
