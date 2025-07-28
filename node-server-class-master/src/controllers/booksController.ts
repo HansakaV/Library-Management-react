@@ -3,8 +3,12 @@ import { APIError } from "../errors/ApiError";
 import { BookModel } from "../models/book";
 
 export const createBook = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const book = new BookModel(req.body);
+    try {    
+     const bookData = {
+            ...req.body,
+            status: req.body.status ? 'available' : 'unavailable'
+        };
+        const book = new BookModel(bookData);
         await book.save();
         res.status(201).json(book);
     } catch (error: any) {
